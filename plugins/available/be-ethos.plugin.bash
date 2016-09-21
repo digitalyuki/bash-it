@@ -66,9 +66,9 @@ function be-ethos {
   fi
 
   JUNGLE_MAIN_QUERY="$(jungle ec2 ls "${BE_ETHOS_PRODUCT_NAME}*" | grep -v 'terminated' | sort )"
-  HOST_JUNGLE_INFO="$(echo "$JUNGLE_MAIN_QUERY" | grep 'bastion')"
-  HOST_IP_BASTION="$(echo "$HOST_JUNGLE_INFO" | awk '{print $5}')"
-  HOST_NAME_BASTION="$(echo "$HOST_JUNGLE_INFO" | awk '{print $1}')"
+  HOST_JUNGLE_BASTION="$(echo "$JUNGLE_MAIN_QUERY" | head -1 | grep 'bastion')"
+  HOST_IP_BASTION="$(echo "$HOST_JUNGLE_BASTION" | awk '{print $5}')"
+  HOST_NAME_BASTION="$(echo "$HOST_JUNGLE_BASTION" | awk '{print $1}')"
 
   if [[ "$2" == "ssh" ]]; then
 
