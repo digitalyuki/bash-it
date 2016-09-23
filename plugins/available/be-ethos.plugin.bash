@@ -4,10 +4,10 @@ about-plugin 'behancecompute ethos ssh and node listing helper'
 function __be-ethos-usage {
     echo -e "Usage: be-ethos <tier> <command>"
     echo -e "  <tier>: dev | stage | prod"
-    echo -e "  <command>: ssh <ip|hosttype> | ls [<search_string>] | scpkey"
+    echo -e "  <command>: ssh <ip|hosttype> | ls [<search_string>] | scpkey [<ip>]"
     echo -e "    ssh <ip|hosttype>: ssh to specific ip or first node of the hosttype ('control'/'worker'/'proxy'/'bastion')"
     echo -e "    ls [<search_string>]: list instances with optional search string"
-    echo -e "    scpkey: copy required key to bastion host"
+    echo -e "    scpkey [<ip>]: copy required key to bastion host, optionally specify internal ip for specific bastion host if there are several"
     echo -e "\nDescription: Does nice things with ec2 and behancecompute, uses jungle, ~/.aws/<tier>.sh, cloudops-be-app-<tier>.pem keys and virtualenv 'be-ethos'"
     echo -e "\nExample: be-ethos dev ssh control"
     echo -e "\nAvailable environnment variables:"
@@ -130,6 +130,12 @@ EOF
 
   elif [[ "$2" == "scpkey" ]]; then
     echo "Copying cloudops key to new bastion host..."
+
+    if [[ "$3" != "" ]] ; then
+      HOST_JUNGLE_BASTION="$(echo "$JUNGLE_MAIN_QUERY" | grep "$3" | grep 'bastion')"
+      HOST_IP_BASTION="$(echo "$HOST_JUNGLE_BASTION" | awk '{print $5}')"
+      HOST_NAME_BASTION="$(echo "$HOST_JUNGLE_BASTION" | awk '{print $1}')"
+    fi
     scp -i ${LOCALUSER_KEY_PATH} ${LOCALUSER_KEY_PATH} ${REMOTEUSER_NAME}@${HOST_IP_BASTION}:${REMOTEUSER_KEY_PATH}
 
   else
