@@ -112,7 +112,7 @@ EOF
       if [[ "$HOST_IP" == "" ]] ; then
         GREP_QUERY="$HOST_TYPE"
       else
-        GREP_QUERY="$HOST_IP"
+        GREP_QUERY="$HOST_IP\t"
       fi
       HOST_IP="$(echo "$JUNGLE_MAIN_QUERY" | grep "$GREP_QUERY" | head -1 | awk '{print $4}')"
       HOST_NAME="$(echo "$JUNGLE_MAIN_QUERY" | grep "$GREP_QUERY" | head -1 | awk '{print $1}')"
